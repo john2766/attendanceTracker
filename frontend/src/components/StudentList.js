@@ -17,13 +17,8 @@ const columns = [
     { field: 'ID', headerName: 'ID', width: 150 }
 ]
 
-// function RenderPresentBox () {
-//     const[checked, setChecked] = useState(null)
-
-// }
-
 // To populate rows of User table
-export function UsersList() {
+export function StudentList() {
     const[rows, setRows] = useState(null)
     const[isData, setIsData] = useState(1)
     useEffect(() => {
@@ -50,22 +45,24 @@ export function UsersList() {
 
 
     return (
-        <Card sx={{
-              width: 3/4,
-              margin: 2
-              
-        }}>
-        <div> List of all the users:</div>
+        <Card
+            sx={{
+                width: 3/4,
+                margin: 2,
+            }}
+            variant='plain'
+        >
+            <div> List of all the users:</div>
 
-        <div>{!rows ? <div>Loading...</div> :
-        !isData ? "No user data available" :
-        <DataGrid
-            height="700px"
-            rows={rows}
-            columns={columns}
-        />
-        }
-        </div>
+            <div>{!rows ? <div>Loading...</div> :
+            !isData ? "No user data available" :
+                <DataGrid
+                    height="700px"
+                    rows={rows}
+                    columns={columns}
+                />
+            }
+            </div>
         </Card>
     );
 }

@@ -67,19 +67,19 @@ export function TimeStampList (startTime, endTime) {
     }, [])
 
     return (
-        <Card sx={{
-            width: 3/4,
-            margin: 2
-      }}>
-      <div> List of all timestamps for classroom 1:</div>
-        <div>{!rows ? "Loading..." :
-            !isData ? "No time stamp data available for the past 7 days" :
-            <DataGrid
-            height="700px"
-            rows={rows}
-            columns={columns}
-            />
-        }</div>
+        <Card
+            sx={{ width: 3/4, margin: 2 }}
+            variant='plain'
+        >
+            <div> List of all timestamps for classroom 1:</div>
+                <div>{!rows ? "Loading..." :
+                    !isData ? "No time stamp data available for the past 7 days" :
+                    <DataGrid
+                    height="700px"
+                    rows={rows}
+                    columns={columns}
+                    />
+                }</div>
         </Card>
     )
 
