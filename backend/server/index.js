@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors')
 const sqlite3 = require('sqlite3').verbose()
 const app = express()
+const bodyParser = require('body-parser')
+
+var jsonParser = bodyParser.json()
 
 let db = new sqlite3.Database('./database/rfidData.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) return console.error(err.message)
@@ -10,6 +13,11 @@ let db = new sqlite3.Database('./database/rfidData.db', sqlite3.OPEN_READWRITE, 
 
 app.use(cors())
 const PORT = 3001
+
+app.post("/sensor_data", jsonParser, (req, res) => {
+    console.log(req.body)
+    res.send("Success")
+})
 
 app.get("/users_list", (req, res) => {
     db.all('SELECT * FROM userData ORDER BY nameLast', [], (err, data) => {
