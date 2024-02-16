@@ -11,7 +11,8 @@ export function LiveClass() {
     const [liveClass, setLiveClass] = useState(null)
 
     const columns = [
-        { field: 'ID', headerName: 'ID', width: 150 },
+        { field: 'nameFirst', headerName: 'First Name', width: 150 },
+        { field: 'nameLast', headerName: 'Last Name', width: 150 },
         { field: 'TimeIn', headerName: 'Time In', width: 150 },
         { field: 'TimeOut', headerName: 'Time Out', width: 150 }
     ]
@@ -48,7 +49,8 @@ export function LiveClass() {
                         setIsData(1)
                         setRows(response.data.map((entry) => ({
                             id: entry.id,
-                            ID: entry.id,
+                            nameFirst: entry.nameFirst,
+                            nameLast: entry.nameLast,
                             TimeIn: entry.timeIn,
                             TimeOut: entry.timeOut ? entry.timeOut : "-"
                         })));
@@ -66,7 +68,7 @@ export function LiveClass() {
             sx={{ width: 3/4, margin: 2 }}
             variant='plain'
         >
-            <div> Loading live class data:</div>
+            <div> Live class data:</div>
                 <div>{!rows ? "Loading..." :
                     !isData ? "No students currently in class" :
                     <DataGrid

@@ -30,19 +30,6 @@ app.get("/users_list", (req, res) => {
     })
 })
 
-// app.get("/time_stamp_list", (req, res) => {
-//     //change to take input that allows table name to be altered based on classroom
-//     db.all('SELECT * FROM timeLogC1', [], (err, data) => {
-//         if (err){
-//             console.error(err.message)
-//             res.send(err.message)
-//         }
-//         else {
-//             console.log("time stamp list")
-//             res.send(data)
-//         }
-//     })
-// })
 
 app.get('/create_class', (req, res) => {
     db.all('INSERT INTO classData VALUES (?,?,?,?,?,?)',
@@ -53,14 +40,7 @@ app.get('/create_class', (req, res) => {
             res.send(err.message)
         }
         else {
-            const query = `CREATE TABLE ${req.query.className} (id INTEGER PRIMARY KEY, timeIn TEXT NOT NULL, timeOut TEXT)`;
-            db.all(query, (err, data) => {
-                if (err) {
-                    console.error(err.message)
-                    res.send(err.message)
-                }
-                else res.send('success')
-            })
+            res.send('success')
         }
     });
 
@@ -114,17 +94,26 @@ app.get("/check_live", (req, res) => {
 
 app.get("/live_class_roster", (req, res) => {
     console.log('/live class roster')
-    query = `SELECT * FROM ${req.query.class} WHERE timeOut IS NULL`
-    console.log(query)
-    db.all(query, (err, data) => {
+    db.all('SELECT classroom FROM classData WHERE className = ?', req.query.class, (err, data) => {
         if (err) {
             console.error(err.messsage)
             res.send(err.message)
         }
         else {
-            console.log("live class roster")
-            console.log(data)
-            res.send(data)
+            query =
+            `SELECT ${data[0].classroom}.*, studentData.id, studentData.nameLast, studentData.nameFirst FROM ${data[0].classroom}
+            JOIN studentData ON ${data[0].classroom}.id = studentData.id
+            WHERE timeOut IS NULL`
+
+            db.all(query, (err, data) => {
+                if (err) {
+                    console.error(err.messsage)
+                    res.send(err.message)
+                }
+                else {
+                    res.send(data)
+                }
+            })
         }
     })
 })
