@@ -13,8 +13,7 @@ export function LiveClass() {
     const columns = [
         { field: 'nameFirst', headerName: 'First Name', width: 150 },
         { field: 'nameLast', headerName: 'Last Name', width: 150 },
-        { field: 'TimeIn', headerName: 'Time In', width: 150 },
-        { field: 'TimeOut', headerName: 'Time Out', width: 150 }
+        { field: 'status', headerName: 'Status', width: 150}
     ]
 
     useEffect(() => {
@@ -51,8 +50,7 @@ export function LiveClass() {
                             id: entry.id,
                             nameFirst: entry.nameFirst,
                             nameLast: entry.nameLast,
-                            TimeIn: entry.timeIn,
-                            TimeOut: entry.timeOut ? entry.timeOut : "-"
+                            status: 'Present',
                         })));
                     }
                 })

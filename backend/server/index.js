@@ -14,9 +14,30 @@ let db = new sqlite3.Database('./database/rfidData.db', sqlite3.OPEN_READWRITE, 
 app.use(cors())
 const PORT = 3001
 
-app.post("/sensor_data", jsonParser, (req, res) => {
-    console.log(req.body)
-    res.send("Success")
+app.post("/sensor_data_time_in", jsonParser, (req, res) => {
+    db.all('INSERT INTO POTR063 VALUES (?, ?, ?)', req.body.id, req.body.timeIn, req.body.timeOut, (err, data) => {
+        if (err) {
+            console.error(err.message)
+            res.send(err.message)
+        }
+        else {
+            console.log(req.body)
+            res.send('success')
+        }
+    })
+})
+
+app.post("/sensor_data_time_out", jsonParser, (req, res) => {
+    db.all('UPDATE POTR063 SET timeOut = ? WHERE id = ? and timeOut is null', req.body.timeOut, req.body.id, (err, data) => {
+        if (err) {
+            console.error(err.message)
+            res.send(err.message)
+        }
+        else {
+            console.log(req.body)
+            res.send('success')
+        }
+    })
 })
 
 app.get("/users_list", (req, res) => {
@@ -103,7 +124,7 @@ app.get("/live_class_roster", (req, res) => {
             query =
             `SELECT ${data[0].classroom}.*, studentData.id, studentData.nameLast, studentData.nameFirst FROM ${data[0].classroom}
             JOIN studentData ON ${data[0].classroom}.id = studentData.id
-            WHERE timeOut IS NULL`
+            WHERE timeOut is null`
 
             db.all(query, (err, data) => {
                 if (err) {

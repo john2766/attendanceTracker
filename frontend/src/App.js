@@ -1,6 +1,6 @@
 //import React, {useState, useRef, useEffect} from 'react';
 // import { StudentList } from './components/StudentList'
-import { TimeStampList } from './components/TimeStampList'
+//import { TimeStampList } from './components/TimeStampList'
 import { LiveClass } from './components/LiveClass'
 import { SideBar } from './components/Sidebar'
 import { Class } from './components/Class'
@@ -18,7 +18,6 @@ function App() {
           <SideBar/>
           <Routes>
             <Route path='/' element={<LiveClass/>} />
-            <Route path='/TimeStampList' element={<TimeStampList/>} />
             <Route path='/newclassform' element={<NewClassForm/>} />
             <Route path='/Class' element={<Class/>} />
             <Route path='/Account' element={<Account/>} />
