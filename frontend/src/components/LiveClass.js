@@ -13,8 +13,8 @@ export function LiveClass() {
     const columns = [
         { field: 'nameFirst', headerName: 'First Name', width: 150 },
         { field: 'nameLast', headerName: 'Last Name', width: 150 },
-        { field: 'TimeIn', headerName: 'Time In', width: 150 },
-        { field: 'TimeOut', headerName: 'Time Out', width: 150 }
+        { field: 'TimeIn', headerName: 'Time In'},
+        { field: 'TimeOut', headerName: 'Time Out'}
     ]
 
     useEffect(() => {
