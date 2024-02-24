@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 export function Classes() {
     const [classes, setClasses] = useState(null)
     useEffect(() => {
-        var instructor = "iAmInstructor" //"Milind Kulkarni" // temporary
+        var instructor = "iAmInstructor" //"Milind Kulkarni" // temporary 
         var params = {
             instructor: instructor
         }
