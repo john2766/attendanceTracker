@@ -115,26 +115,38 @@ app.get("/check_live", (req, res) => {
 
 app.get("/live_class_roster", (req, res) => {
     console.log('/live class roster')
-    db.all('SELECT classroom FROM classData WHERE className = ?', req.query.class, (err, data) => {
+
+    db.all("SELECT classroom FROM classData WHERE className = ?", req.query.class, (err, classData) => {
         if (err) {
             console.error(err.messsage)
             res.send(err.message)
         }
         else {
-            query =
-            `SELECT ${data[0].classroom}.*, studentData.id, studentData.nameLast, studentData.nameFirst FROM ${data[0].classroom}
-            JOIN studentData ON ${data[0].classroom}.id = studentData.id
-            WHERE timeOut is null`
+            console.log(classData)
 
-            db.all(query, (err, data) => {
+            db.all(`SELECT id FROM attendance WHERE className = ?`, req.query.class, (err, idData) => {
                 if (err) {
-                    console.error(err.messsage)
+                    console.error(err.message)
                     res.send(err.message)
                 }
                 else {
-                    res.send(data)
+                    console.log(idData)
+                    query =
+                    `SELECT ${classData[0].classroom}.*, studentData.id, studentData.nameLast, studentData.nameFirst FROM ${classData[0].classroom}
+                    JOIN studentData ON ${classData[0].classroom}.id = studentData.id
+                    WHERE timeOut is null`
+                    db.all(query, (err, data) => {
+                        if (err) {
+                            console.error(err.messsage)
+                            res.send(err.message)
+                        }
+                        else {
+                            console.log(data)
+                            res.send(data)
+                        }
+                    })  
                 }
-            })
+            })             
         }
     })
 })
