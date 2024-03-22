@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 export function Classes() {
     const [classes, setClasses] = useState(null)
     useEffect(() => {
-        var instructor = "iAmInstructor" //"Milind Kulkarni" // temporary 
+        var instructor = "Milind Kulkarni" //"iAmInstructor" //"Milind Kulkarni" // temporary
         var params = {
             instructor: instructor
         }
@@ -19,7 +19,7 @@ export function Classes() {
                 })));
             })
             .catch(error => {
-                console.log("Error retriving classes: ", error)
+                console.log("Error retrieving classes: ", error)
             })
     }, [])
 
@@ -27,7 +27,6 @@ export function Classes() {
     var component = []
 
     for (var i in classes) {
-        console.log('this class = ', classes[i].className)
         component = component.concat(
             <MenuItem
                 key={i}

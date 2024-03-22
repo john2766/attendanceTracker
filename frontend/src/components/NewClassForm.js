@@ -6,26 +6,52 @@ import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+
 
 export function NewClassForm() {
-    const [className, setClassName] = useState()
-    const [classroom, setClassroom] = useState()
-    const [startTime, setStartTime] = useState()
-    const [endTime, setEndTime] = useState()
+    const [className, setClassName] = useState(null)
+    const [classroom, setClassroom] = useState(null)
+    const [startTime, setStartTime] = useState(null)
+    const [endTime, setEndTime] = useState(null)
     const [days, setDays] = useState([])
     const [classrooms, setClassrooms]=useState([])
 
+    const navigate = useNavigate()
     function handleFormSubmission() {
+        // change days to a string
+        var dayString = ''
+        for (var idx in days){
+            dayString += days[idx] + ','
+        }
+        console.log(dayString)
+        console.log("classroom = ", classroom)
+
         const params = {
-            username: 'iAmInstructor',
+            username: 'Milind Kulkarni', //iAmInstructor',
             className: className,
             classroom: classroom,
             startTime: startTime,
             endTime: endTime,
-            days: days
+            days: dayString
+        }
+        for (var value in params) {
+            console.log("value = ", params[value])
+            if (params[value] === null || params[value].length === 0) {
+                alert("Please fill in all fields before submitting.")
+                return
+            }
         }
         axios("/create_class", { params })
-        console.log('submitting info: ', className)
+            .then(response => {
+                console.log(response)
+                alert("Form submitted")
+                navigate("/Class/" + className)
+            })
+            .catch(error => {
+                console.log(error)
+                alert("There was an error submitting your form. Please double check your input and try again.")
+            })
     }
 
     useEffect(() => {
@@ -73,7 +99,7 @@ export function NewClassForm() {
             sx={{ width: 3/4, margin: 2}}
             variant='plain'
         >
-            <h3> New Class Form </h3>
+            <h2> New Class Form </h2>
             <form onSubmit={(e) => e.preventDefault()}>
                 <label> Class name: </label><br/>
                 <TextField
@@ -88,7 +114,8 @@ export function NewClassForm() {
                     id="classroom"
                     sx={{ width: .3 }}
                     options={classrooms}
-                    getOptionLabel={(option) => option.name}
+                    getOptionLabel={(option) => option ? option.name : ''}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
                     renderOption={(props, option) => (
                         <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                           {option.name}
@@ -100,7 +127,7 @@ export function NewClassForm() {
                           inputProps={{...params.inputProps}}
                         />
                       )}
-                      onChange={event => {setClassroom(event.target.value)}}
+                      onChange={(event, newValue) => {setClassroom(newValue ? newValue.name : null)}}
                 />
                 <Stack direction="row" spacing={5} style={{ paddingBottom: 30, paddingTop: 20}}>
                     <Card variant='plain' sx={{ flexDirection: 'row' }}>
