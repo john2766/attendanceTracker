@@ -16,10 +16,16 @@ export function LiveClass() {
         { field: 'status', headerName: 'Status', width: 150}
     ]
 
+    function NoLiveClass() {
+        return (
+            <Card variant='plain' align='center'> No classes are currently live. </Card>
+        )
+    }
+
     useEffect(() => {
         console.log("check if live")
         var params = {
-            username: 'iAmInstructor'
+            username:  'Milind Kulkarni' // 'iAmInstructor' //
         }
         axios("/check_live", { params })
             .then(response => {
@@ -59,6 +65,7 @@ export function LiveClass() {
                 })
         }
         else console.log("no class in session")
+        // Display time of next class (ideally) if class not in session
     }, [liveClass])
 
     return (
@@ -66,8 +73,9 @@ export function LiveClass() {
             sx={{ width: 3/4, margin: 2 }}
             variant='plain'
         >
-            <div> Live class data:</div>
-                <div>{!rows ? "Loading..." :
+            <h2> Live Class Data</h2>
+                <div>{!rows ?
+                    !liveClass ? <NoLiveClass/> : "Loading..." :
                     !isData ? "No students currently in class" :
                     <DataGrid
                     height="700px"

@@ -1,14 +1,11 @@
 import { Sidebar, Menu, MenuItem, sidebarClasses } from 'react-pro-sidebar'
 import { Link } from 'react-router-dom'
 import MenuIcon from '@mui/icons-material/Menu'
-// import { Icon } from '@mui/material'
 import React, { useState} from 'react'
 import { Classes } from './Classes'
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-// import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
-// import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 
 export function SideBar () {
     const [isCollapsed, setIsCollapsed] = useState(false)

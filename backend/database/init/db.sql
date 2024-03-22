@@ -26,7 +26,7 @@ timeOut TEXT
 
 CREATE TABLE IF NOT EXISTS attendance (
 id INTEGER NOT NULL,
-classname TEXT NOT NULL,
+className TEXT NOT NULL,
 attendances INTEGER NOT NULL,
 monday INTEGER DEFAULT 0,
 tuesday INTEGER DEFAULT 0,
