@@ -92,7 +92,7 @@ export function Class () {
             id: id,
             className: className
         }
-        axios("/update_attendance", { params })
+        axios.post("/update_attendance", params)
         setIsOpen(false)
         setRefresh(!refresh)
     }
@@ -154,7 +154,7 @@ export function Class () {
             id: student.id,
             className: className
          }
-        axios("/student_add", { params })
+        axios.post("/student_add", params)
         setIsAddStudent(false)
         setRefresh(!refresh)
         setStudent(null)
@@ -165,10 +165,9 @@ export function Class () {
     function handleDeleteClass() {
         console.log("DELETING CLASS ")
         var params = { className: className }
-        axios("/class_delete", { params })
+        axios.post("/class_delete", params)
         setDeleteOpen(false)
         navigate('/')
-        return
     }
 
     // Class Roster Table

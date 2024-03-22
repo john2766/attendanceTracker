@@ -42,7 +42,7 @@ export function NewClassForm() {
                 return
             }
         }
-        axios("/create_class", { params })
+        axios.post("/create_class", params)
             .then(response => {
                 console.log(response)
                 alert("Form submitted")
