@@ -44,10 +44,10 @@ app.post("/sensor_data_time_out", jsonParser, (req, res) => {
 
 
 // NewClassForm.js: Take form data and create a new class
-app.get('/create_class', (req, res) => {
+app.post('/create_class', jsonParser, (req, res) => {
     db.all('INSERT INTO classData VALUES (?,?,?,?,?,?)',
-    req.query.className, req.query.username, req.query.startTime, req.query.endTime,
-    req.query.classroom, req.query.days, (err, data) => {
+    req.body.className, req.body.username, req.body.startTime, req.body.endTime,
+    req.body.classroom, req.body.days, (err, data) => {
         if (err) {
             console.error(err.message)
             res.status(400).send(err.message)
@@ -162,8 +162,8 @@ app.get("/roster", (req, res) => {
 })
 
 // Class.js: Change attendance data manually entered by instructor
-app.get("/update_attendance", (req, res) => {
-    db.all(`UPDATE attendance SET attendances = ? WHERE id = ? AND className = ?`, req.query.newVal, req.query.id, req.query.className, (err, data) => {
+app.post("/update_attendance", jsonParser, (req, res) => {
+    db.all(`UPDATE attendance SET attendances = ? WHERE id = ? AND className = ?`, req.body.newVal, req.body.id, req.body.className, (err, data) => {
         if (err) {
             console.error(err.message)
             res.send(err.message)
@@ -209,11 +209,11 @@ app.get("/student_delete", (req, res) => {
 })
 
 // Class.js: Delete class
-app.get("/class_delete", (req, res) => {
-    db.all("DELETE FROM classData WHERE className = ?", req.query.className, (err, data) => {
+app.post("/class_delete", jsonParser, (req, res) => {
+    db.all("DELETE FROM classData WHERE className = ?", req.body.className, (err, data) => {
         if (err) {console.error(err.message)}
         else {
-            db.all("DELETE FROM attendance WHERE className = ?", req.query.className, (err, data) => {
+            db.all("DELETE FROM attendance WHERE className = ?", req.body.className, (err, data) => {
                 if (err) {console.error(err.message)}
                 else {
                     res.send('success')
@@ -235,9 +235,10 @@ app.get("/all_students", (req, res) => {
 })
 
 // Class.js: Add new student to class
-app.get("/student_add", (req, res) => {
+app.post("/student_add", jsonParser, (req, res) => {
     console.log("student_add")
-    db.all("INSERT INTO attendance (id, className, attendances) VALUES (?,?,0)", req.query.id, req.query.className, (err, data) => {
+    console.log("body is: ", req.body)
+    db.all("INSERT INTO attendance (id, className, attendances) VALUES (?,?,0)", req.body.id, req.body.className, (err, data) => {
         if (err) {console.error(err.message)}
         else {
            res.send('success')
