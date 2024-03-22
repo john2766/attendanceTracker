@@ -28,6 +28,8 @@ export function Class () {
     const [time, setTime] = useState()
 
     let {className} = useParams()
+    const navigate = useNavigate()
+
 
     // Class roster (and overall attendance) table layout
     const columns = [
@@ -161,7 +163,6 @@ export function Class () {
     }
 
     // Delete class from database
-    const navigate = useNavigate()
     function handleDeleteClass() {
         console.log("DELETING CLASS ")
         var params = { className: className }
@@ -190,11 +191,16 @@ export function Class () {
 
     // Get important information about the class
     useEffect(() => {
-
         var params = { className: className }
         axios('/class_info', { params })
         .then (response => {
             console.log("classinfo = ", response.data[0])
+
+            // if no class data, class does not exist
+            if (!response.data[0]) {
+                navigate('/PageNotFound')
+                return
+            }
             // Parse days back into list
             setDays(response.data[0].days.split(','))
 
@@ -210,7 +216,7 @@ export function Class () {
             console.log(location)
 
         })
-    },[])
+    },[className, location, navigate])
 
     // Display important information about the class
     function ClassInfo() {
