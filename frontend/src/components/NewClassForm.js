@@ -54,6 +54,7 @@ export function NewClassForm() {
             })
     }
 
+    // Get all classrooms for dropdown
     useEffect(() => {
         axios("/classrooms")
             .then(response => {
