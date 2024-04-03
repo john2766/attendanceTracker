@@ -51,7 +51,7 @@ export function Class () {
             className: className
         }
         console.log(params)
-        axios('/student_delete', { params })
+        axios.post('/student_delete', params)
         setDeleteOpen(null)
         setRefresh(!refresh)
     }
@@ -257,7 +257,7 @@ export function Class () {
                     roster: result.data,
                     className: className
                 }
-                axios("/upload_roster", { params })
+                axios.post("/upload_roster", params)
             },
             header: true
         });
