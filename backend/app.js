@@ -8,7 +8,7 @@ require('./services/classServices')
 const MainRouter = require('./routes/index')
 const Service = require('./services/hardwareServices')
 
-app.use('/service', Service)
+app.use('/services', Service)
 app.use('/', MainRouter)
 
 // TODO: Add authentication
