@@ -3,7 +3,7 @@ const cors = require('cors')
 const sqlite3 = require('sqlite3').verbose()
 const app = express()
 const bodyParser = require('body-parser')
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer')
 
 var jsonParser = bodyParser.json()
 
