@@ -49,6 +49,6 @@ days TEXT NOT NULL
 -- INSTRUCTORDATA --
 
 CREATE TABLE IF NOT EXISTS instructorData (
-username TEXT,
+username TEXT PRIMARY KEY,
 password TEXT
 );

@@ -10,37 +10,38 @@ import AddIcon from '@mui/icons-material/Add';
 export function SideBar () {
     const [isCollapsed, setIsCollapsed] = useState(false)
     return (
-    <Sidebar
-        collapsed = {isCollapsed}
-        rootStyles={{
-            [`.${sidebarClasses.container}`]: {
-            backgroundColor: 'lightgrey',
-            height: '700px'
-            },
-        }}
-    >
-        <Menu menuItemStyles={{
-            'button': {backgroundColor: 'lightgrey'}
-        }}>
-            <MenuItem
-                icon={<MenuIcon fontSize='small'/>}
-                onClick= {() => setIsCollapsed(!isCollapsed)}
-            >
-            </MenuItem>
-            <MenuItem
-                component={<Link to='/' />}
-                icon={<AccessTimeIcon fontSize='small'/>}
-            > Live Classes </MenuItem>
-            <Classes/>
-            <MenuItem
-                component={<Link to='/newclassform'/>}
-                icon={<AddIcon fontSize='small'/>}
-            > Add Class </MenuItem>
-            <MenuItem
-                icon={<PersonIcon fontSize='small'/>}
-                component={<Link to="/Account"/>}
-            > Account </MenuItem>
-        </Menu>
-    </Sidebar>
+        <Sidebar
+            collapsed = {isCollapsed}
+            rootStyles={{
+                [`.${sidebarClasses.container}`]: {
+                backgroundColor: 'lightgrey',
+                height: '700px'
+                },
+            }}
+        >
+            <Menu menuItemStyles={{
+                'button': {backgroundColor: 'lightgrey'}
+            }}>
+                <MenuItem
+                    icon={<MenuIcon fontSize='small'/>}
+                    onClick= {() => setIsCollapsed(!isCollapsed)}
+                >
+                </MenuItem>
+                <MenuItem
+                    component={<Link to='/' />}
+                    icon={<AccessTimeIcon fontSize='small'/>}
+                > Live Classes </MenuItem>
+                <Classes/>
+                <MenuItem
+                    component={<Link to='/newclassform'/>}
+                    icon={<AddIcon fontSize='small'/>}
+                > Add Class </MenuItem>
+                <MenuItem
+                    icon={<PersonIcon fontSize='small'/>}
+                    component={<Link to="/Account"/>}
+                > Account </MenuItem>
+            </Menu>
+        </Sidebar>
+        
     )
 }

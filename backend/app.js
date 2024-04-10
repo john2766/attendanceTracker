@@ -4,13 +4,14 @@ const app = express();
 const cors = require('cors')
 app.use(cors())
 
-// Import the main router file (index.js)
-const mainRouter = require('./routes/index');
+require('./services/classServices')
+const MainRouter = require('./routes/index')
+const Service = require('./services/hardwareServices')
 
-// Use the main router in your Express application
-app.use('/', mainRouter);
+app.use('/service', Service)
+app.use('/', MainRouter)
 
-// Additional middleware and configuration can be added here
+// TODO: Add authentication
 
 // Listen for requests
 const port = process.env.PORT || 3001;

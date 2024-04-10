@@ -3,11 +3,12 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
+const verifyToken = require('../middleware/authMiddleware')
 
 // NewClassForm.js: Take form data and create a new class
-router.post('/create_class', jsonParser, (req, res) => {
+router.post('/create_class', jsonParser, verifyToken, (req, res) => {
     db.all('INSERT INTO classData VALUES (?,?,?,?,?,?)',
-    req.body.className, req.body.username, req.body.startTime, req.body.endTime,
+    req.body.className, req.userId, req.body.startTime, req.body.endTime,
     req.body.classroom, req.body.days, (err, data) => {
         if (err) {
             console.error(err.message)
@@ -21,7 +22,7 @@ router.post('/create_class', jsonParser, (req, res) => {
 })
 
 // NewClassForm.js: Get list of all classroom tables for dropdown
-router.get('/classrooms', (req, res) => {
+router.get('/classrooms', verifyToken, (req, res) => {
     console.log("classForm/classrooms")
     db.all(`SELECT name FROM sqlite_master WHERE type='table' AND name != 'attendance'
     AND name != 'classData' AND name != 'instructorData' AND name != 'studentData' `, (err, data) => {

@@ -4,6 +4,7 @@ var jsonParser = bodyParser.json()
 const express = require('express');
 const router = express.Router();
 
+// if this doesn't work, try changing '/sensor_data_time_in' with '/service/sensor_data_time_in'
 router.post("/sensor_data_time_in", jsonParser, (req, res) => {
     db.all('INSERT INTO POTR063 VALUES (?, ?, ?)', req.body.id, req.body.timeIn, req.body.timeOut, (err, data) => {
         if (err) {

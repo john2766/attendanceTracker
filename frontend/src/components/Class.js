@@ -50,8 +50,8 @@ export function Class () {
             id: deleteOpen.id,
             className: className
         }
-        console.log(params)
-        axios.post('/student_delete', params)
+        var token = localStorage.getItem("token")
+        axios.post('/student_delete', params, { headers: {'Authorization' : token} })
         setDeleteOpen(null)
         setRefresh(!refresh)
     }
@@ -59,9 +59,9 @@ export function Class () {
     // Populate class roster table
     useEffect(() => {
         var params = { className: className }
-        axios('/roster', { params })
+        var token = localStorage.getItem("token")
+        axios('/roster', { headers: {'Authorization' : token}, params: params})
             .then(response => {
-                console.log(response.data)
                 setRows(response.data.map((entry) => ({
                     id: entry.id,
                     nameFirst: entry.nameFirst,
@@ -94,7 +94,8 @@ export function Class () {
             id: id,
             className: className
         }
-        axios.post("/update_attendance", params)
+        var token = localStorage.getItem("token")
+        axios.post("/update_attendance", params, { headers: {'Authorization' : token} })
         setIsOpen(false)
         setRefresh(!refresh)
     }
@@ -102,9 +103,9 @@ export function Class () {
     // Get a list of all students in the system but not in the class (for dropdown)
     useEffect(() => {
         var params = { className: className }
-        axios("/all_students", { params })
+        var token = localStorage.getItem("token")
+        axios("/all_students", { headers: {'Authorization' : token}, params: params })
         .then(response => {
-            console.log(response.data)
             setStudents(response.data)
         })
         .catch(error => {
@@ -156,7 +157,8 @@ export function Class () {
             id: student.id,
             className: className
          }
-        axios.post("/student_add", params)
+        var token = localStorage.getItem("token")
+        axios.post("/student_add", params, { headers: {'Authorization' : token} })
         setIsAddStudent(false)
         setRefresh(!refresh)
         setStudent(null)
@@ -166,7 +168,8 @@ export function Class () {
     function handleDeleteClass() {
         console.log("DELETING CLASS ")
         var params = { className: className }
-        axios.post("/class_delete", params)
+        var token = localStorage.getItem("token")
+        axios.post("/class_delete", params, { headers: {'Authorization' : token} })
         setDeleteOpen(false)
         navigate('/')
     }
@@ -191,7 +194,8 @@ export function Class () {
     // Get important information about the class
     useEffect(() => {
         var params = { className: className }
-        axios('/class_info', { params })
+        var token = localStorage.getItem("token")
+        axios('/class_info', { headers: {'Authorization' : token}, params: params })
         .then (response => {
             console.log("classinfo = ", response.data[0])
 
@@ -219,7 +223,6 @@ export function Class () {
 
     // Display important information about the class
     function ClassInfo() {
-        console.log(days.length)
         const listDays = days.map((day, index) => day !== '' &&
             <span key={index}> {day}
             </span>)
@@ -257,11 +260,17 @@ export function Class () {
                     roster: result.data,
                     className: className
                 }
-                axios.post("/upload_roster", params)
+                var token = localStorage.getItem("token")
+                axios.post("/upload_roster", params, { headers: {'Authorization' : token} })
+                    .then (response => {
+                        console.log("setting refresh")
+                        setRefresh(!refresh)
+                    })
             },
             header: true
         });
-        setRefresh(!refresh)
+        // console.log("changing refresh")
+        //setRefresh(!refresh)
     }
 
     return (

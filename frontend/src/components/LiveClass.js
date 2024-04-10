@@ -24,10 +24,8 @@ export function LiveClass() {
 
     useEffect(() => {
         console.log("check if live")
-        var params = {
-            username:  'Milind Kulkarni' // 'iAmInstructor' //
-        }
-        axios("/check_live", { params })
+        var token = localStorage.getItem("token")
+        axios("/check_live", { headers: {'Authorization' : token} })
             .then(response => {
                 if(response.data.length === 0) {
                     setLiveClass(null)
@@ -41,10 +39,9 @@ export function LiveClass() {
 
     useEffect(() => {
         if (liveClass !== null) {
-            var params = {
-                class: liveClass
-            }
-            axios("/live_class_roster", { params })
+            var params = { class: liveClass }
+            var token = localStorage.getItem("token")
+            axios("/live_class_roster", { headers: {'Authorization' : token}, params: params })
                 .then(response => {
                     if(response.data.length === 0) {
                         setIsData(0)
