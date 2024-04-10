@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router()
-const db = require('../models/db')
+const db = require('../models/db');
+const verifyToken = require('../middleware/authMiddleware');
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 // LiveClass.js: Checks all classes to see if any are currently in session (return className if so)
-router.get("/check_live", (req, res) => {
-    db.all('SELECT * FROM classData WHERE username = ?', req.query.username, (err, data) => {
+router.get("/check_live", verifyToken, (req, res) => {
+    db.all('SELECT * FROM classData WHERE username = ?', req.userId, (err, data) => {
         if (err) {
             console.error(err.message)
             res.send(err.message)
@@ -34,7 +35,7 @@ router.get("/check_live", (req, res) => {
 })
 
 // LiveClass.js: Display all student from a given className currently in a given classroom
-router.get("/live_class_roster", (req, res) => {
+router.get("/live_class_roster", verifyToken, (req, res) => {
     db.all('SELECT classroom FROM classData WHERE className = ?', req.query.class, (err, data) => {
         if (err) {
             console.error(err.message)

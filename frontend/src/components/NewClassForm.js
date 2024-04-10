@@ -28,7 +28,6 @@ export function NewClassForm() {
         console.log("classroom = ", classroom)
 
         const params = {
-            username: 'Milind Kulkarni', //iAmInstructor',
             className: className,
             classroom: classroom,
             startTime: startTime,
@@ -42,7 +41,8 @@ export function NewClassForm() {
                 return
             }
         }
-        axios.post("/create_class", params)
+        const token = localStorage.getItem("token")
+        axios.post("/create_class", params, { headers: {'Authorization' : token} })
             .then(response => {
                 console.log(response)
                 alert("Form submitted")
@@ -56,7 +56,8 @@ export function NewClassForm() {
 
     // Get all classrooms for dropdown
     useEffect(() => {
-        axios("/classrooms")
+        const token = localStorage.getItem("token")
+        axios("/classrooms", { headers: {'Authorization' : token} })
             .then(response => {
                 console.log("response = ", response.data)
                 setClassrooms(response.data)
