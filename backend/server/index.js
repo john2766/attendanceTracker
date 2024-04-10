@@ -3,6 +3,7 @@ const cors = require('cors')
 const sqlite3 = require('sqlite3').verbose()
 const app = express()
 const bodyParser = require('body-parser')
+const nodemailer = require("nodemailer");
 
 var jsonParser = bodyParser.json()
 
@@ -14,6 +15,33 @@ let db = new sqlite3.Database('./database/rfidData.db', sqlite3.OPEN_READWRITE, 
 
 app.use(cors())
 const PORT = 3001
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'chan.ng.cashin@gmail.com',
+        pass: 'yqna uzmx mtoh iscm',
+    },
+});
+
+const mailDetails = {
+    from: 'chan.ng.cashin@gmail.com',
+    to: 'cngcashi@purdue.edu',
+    subject: 'Test mail',
+    text: 'Node.js testing mail for GeeksforGeeks'
+};
+
+transporter.sendMail(mailDetails, function (err, data) {
+    if (err) {
+        console.log('Error Occurs');
+        console.error(err.message)
+    } else {
+        console.log('Email sent successfully');
+    }
+});
 
 app.post("/sensor_data_time_in", jsonParser, (req, res) => {
     db.all('INSERT INTO POTR063 VALUES (?, ?, ?)', req.body.id, req.body.timeIn, req.body.timeOut, (err, data) => {
