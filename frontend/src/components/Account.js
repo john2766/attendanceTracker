@@ -1,43 +1,15 @@
 // Authentication based on this website:
 // https://www.bezkoder.com/react-express-authentication-jwt/
 
-import { useState } from 'react'
-import axios from 'axios'
 import { Card } from '@mui/material'
-import TextField from '@mui/material/TextField'
 import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 
 export function Account () {
-    const [user, setUser] = useState()
-    const [password, setPassword] = useState()
     const navigate = useNavigate()
-
-    function handleSignup() {
-        const params = {
-            username : user,
-            password : password
-        }
-        axios.post('/signup', params)
-        setPassword(null)
-    }
-
-    function handleLogin() {
-        if (user == null || password == null) {
-            alert("Please enter both a username and password")
-            return
-        }
-        const params = {
-            username: user,
-            password: password
-        }
-        axios.post('/login', params)
-            .then(response => {
-                localStorage.setItem('token', response.data.token)
-                console.log(response)
-            })
-        setPassword(null)
-    }
+    const [username, setUsername] = useState()
 
     function handleLogout() {
         console.log("handlelogout")
@@ -45,7 +17,17 @@ export function Account () {
         navigate('/Login')
     }
 
-    var token = localStorage.getItem("token")
+    useEffect(() => {
+        var token = localStorage.getItem("token")
+        axios('/account', { headers: {'Authorization' : token} })
+            .then(result => {
+                setUsername(result.data)
+            })
+            .catch(error => {
+                console.log("error with account: ", error)
+                navigate('/Login')
+            })
+    })
 
     return (
         <Card
@@ -53,14 +35,20 @@ export function Account () {
         variant='plain'
         >
             <h2> Account </h2>
+            <p> User: {username ? <span> {username} </span> : ''} </p>
+            
             <div>
-                TODO: <br/>
+                TODO (in order): <br/>
                 - profile page (username, log out button) <br/>
-                - Protected routes (w/ redirect to login)
-                - Hide password
+                - sidebar refresh when class is deleted/new class is added <br/>
+                - add more classrooms/dummy data, make login info more professional <br/>
+                - hide password <br/>
+                - spacing on upload roster page (of buttons) <br/>
+                - button theme <br/>
+                - specify roster upload format (or allow user to download template) <br/>
+                - redirect to login on token expiration <br/>
             </div><br/>
             <button type='submit' onClick={() => handleLogout()}> Logout </button>
-            <br/><br/>{token}
         </Card>
     )
 }

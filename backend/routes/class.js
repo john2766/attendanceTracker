@@ -1,16 +1,14 @@
 const db = require('../models/db')
 const verifyToken = require('../middleware/authMiddleware')
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
-// const { verify } = require('argon2');
+const express = require('express')
+const router = express.Router()
+const bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 const authorize = require('../middleware/authorize')
 
 // Class.js: Display class roster for given className
 router.get("/roster", verifyToken, (req, res) => {
     authorize(req.userId, req.query.className, (authed) => {
-        console.log("authed = ", authed)
         if (!authed) {
             res.status(401).json({error: 'Permission denied'})
             return
@@ -31,6 +29,33 @@ router.get("/roster", verifyToken, (req, res) => {
                         res.send(data)
                     }
             })
+        }
+    })
+})
+
+// Class.js: Display past attendance data for given className
+router.get("/attendance", verifyToken, (req, res) => {
+    authorize(req.userId, req.query.className, (authed) => {
+        if (!authed) {
+            res.status(401).json({error: 'Permission denied'})
+            return
+        }
+        else
+        {
+            db.all(
+                `SELECT attendance.*, studentData.id, studentData.nameLast, studentData.nameFirst
+                FROM attendance
+                JOIN studentData ON attendance.id = studentData.id
+                WHERE className = ?`, req.query.className, (err, data) => {
+                    if (err) {
+                        console.error(err.message)
+                        res.send(err.message)
+                    }
+                    else {
+                        res.send(data)
+                    }
+                }
+            )
         }
     })
 })
@@ -73,9 +98,20 @@ router.post("/upload_roster", jsonParser, verifyToken, (req, res) => {
 
 // Class.js: Delete student from a class
 router.post("/student_delete", jsonParser, verifyToken, (req, res) => {
-    db.all("DELETE FROM attendance WHERE id = ? AND className = ?", req.body.id, req.body.className, (err, data) => {
-        if (err) {
-            console.error(err.message)
+    console.log(req.userId, req.body.className)
+    authorize(req.userId, req.body.className, (authed) => {
+        console.log("authed (student delete) = ", authed)
+        if (!authed) {
+            res.status(401).json({error: 'Permission denied'})
+            return
+        }
+        else
+        {
+            db.all("DELETE FROM attendance WHERE id = ? AND className = ?", req.body.id, req.body.className, (err, data) => {
+                if (err) {
+                    console.error(err.message)
+                }
+            })
         }
     })
 })

@@ -26,6 +26,10 @@ export function Login () {
                 console.log(response)
                 navigate('/')
             })
+            .catch(error => {
+                console.log(error)
+                alert("Username or password is incorrect. Please try again.")
+            })
         setPassword(null)
     }
 

@@ -35,23 +35,57 @@ router.get("/check_live", verifyToken, (req, res) => {
 })
 
 // LiveClass.js: Display all student from a given className currently in a given classroom
-router.get("/live_class_roster", verifyToken, (req, res) => {
+router.get("/live_class_roster_present", verifyToken, (req, res) => {
     db.all('SELECT classroom FROM classData WHERE className = ?', req.query.class, (err, data) => {
         if (err) {
-            console.error(err.message)
+            console.error("present roster classroom error: ", err.message)
             res.send(err.message)
         }
         else {
             query =
-            `SELECT ${data[0].classroom}.*, studentData.id, studentData.nameLast, studentData.nameFirst FROM ${data[0].classroom}
-            JOIN studentData ON ${data[0].classroom}.id = studentData.id
-            WHERE timeOut is null`
+            `SELECT DISTINCT attendance.id, studentData.*
+            FROM attendance
+            INNER JOIN studentData ON attendance.id = studentData.id
+            WHERE attendance.id IN (
+                SELECT id FROM ${data[0].classroom} WHERE timeOut IS NULL
+            )
+            AND attendance.className = "${req.query.class}"`
 
             db.all(query, (err, data) => {
                 if (err) {
-                    console.error(err.message)
+                    console.error("present roster data error: ", err.message)
                     res.send(err.message)
                 }
+                else {
+                    res.send(data)
+                }
+            })
+        }
+    })
+})
+
+// LiveClass.js: Display all student from a given className currently not in a given classroom
+router.get("/live_class_roster_absent", verifyToken, (req, res) => {
+    db.all('SELECT classroom FROM classData WHERE className = ?', req.query.class, (err, data) => {
+        if (err) {
+            console.error("absent roster classroom error: ", err.message)
+            res.send(err.message)
+        }
+        else {
+            query = `SELECT DISTINCT attendance.id, studentData.*
+            FROM attendance
+            INNER JOIN studentData ON attendance.id = studentData.id
+            WHERE attendance.id NOT IN (
+                SELECT id FROM ${data[0].classroom} WHERE timeOut IS NULL
+            )
+            AND attendance.className = "${req.query.class}"`
+
+            db.all(query, (err, data) => {
+                if (err) {
+                    console.error("absent roster data error: ", err.message)
+                    res.send(err.message)
+                }
+                // get all students who are not in data
                 else {
                     res.send(data)
                 }
