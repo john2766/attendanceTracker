@@ -8,11 +8,9 @@ import { Login } from './components/Login'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { PageNotFound } from './components/PageNotFound'
 import { Outlet } from 'react-router-dom'
-// import { Sidebar } from 'react-pro-sidebar'
 
 
 function App() {
-  // const navigate = useNavigate()
 
   const SidebarLayout = () => (
     <>
@@ -20,12 +18,6 @@ function App() {
       <Outlet />
     </>
   )
-
-  // function handleLogout() {
-  //   console.log("handlelogout")
-  //   localStorage.removeItem("token")
-  //   // navigate('/login')
-  // }
 
   return (
       <Router>
@@ -36,11 +28,10 @@ function App() {
               <Route path='/newclassform' element={<NewClassForm/>} />
               <Route path='/Class/:className' element={<Class/>} />
               <Route path='/Account' element={<Account/>} />
-              <Route path='*' element={<PageNotFound/>} />
             </Route>
             <Route path='/Login' element={<Login/>} />
+            <Route path='*' element={<PageNotFound/>} />
           </Routes>
-          {/* <button style={{height: 30}}onClick={handleLogout()}> Logout </button> */}
         </div>
       </Router>
 
