@@ -11,8 +11,6 @@ const Service = require('./services/hardwareServices')
 app.use('/services', Service)
 app.use('/', MainRouter)
 
-// TODO: Add authentication
-
 // Listen for requests
 const port = process.env.PORT || 3001;
 app.listen(port, () => {

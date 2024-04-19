@@ -58,4 +58,14 @@ router.post("/sensor_data_time_out", jsonParser, (req, res) => {
     })
 })
 
+// Class.js: Get list of all students not already enrolled in className
+router.get("/all_students", (req, res) => {
+    db.all("SELECT id, nameFirst, nameLast, email FROM studentData WHERE id NOT IN (SELECT id FROM attendance WHERE className = ?)", req.query.className, (err, data) => {
+        if (err) {console.error(err.message)}
+        else {
+            res.send(data)
+        }
+    })
+})
+
 module.exports = router
