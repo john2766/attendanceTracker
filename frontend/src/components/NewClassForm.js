@@ -47,6 +47,7 @@ export function NewClassForm() {
                 console.log(response)
                 alert("Form submitted")
                 navigate("/Class/" + className)
+                window.location.reload()
             })
             .catch(error => {
                 console.log(error)

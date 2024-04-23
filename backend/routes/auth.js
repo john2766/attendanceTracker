@@ -23,6 +23,7 @@ router.post('/signup', jsonParser, async (req, res) => {
     }
     catch(err) {
         console.log(err.message)
+        res.status(409).json({ error: 'Signup failed' })
     }
 })
 
@@ -35,9 +36,14 @@ router.post('/login', jsonParser, async (req, res) => {
             return
         }
         else {
+            console.log(data)
+            if (!data){
+                res.status(401).json({ error: 'No data sent for user' })
+                return
+            }
             hashedPassword = data[0].password
             if(await argon2.verify(hashedPassword, req.body.password)) {
-                const token = jwt.sign({ userId: req.body.username }, secretKey, { expiresIn: '1h', });
+                const token = jwt.sign({ userId: req.body.username }, secretKey, { expiresIn: '1h', })
                 res.status(200).json({ token })
             }
             else {

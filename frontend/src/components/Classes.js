@@ -9,7 +9,6 @@ export function Classes() {
     const [classes, setClasses] = useState([])
     useEffect(() => {
         var token = localStorage.getItem("token")
-        console.log('token in /classes: ', token)
         if (token != null) {
             axios("/classes", { headers: {'Authorization' : token} })
                 .then(response => {
@@ -25,7 +24,7 @@ export function Classes() {
                 })
         }
         else(navigate('/login'))
-    }, [])
+    }, [navigate])
 
     console.log("Classes = ", classes)
     var component = []
