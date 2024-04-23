@@ -1,10 +1,7 @@
-const { getMaxListeners } = require('nodemailer/lib/xoauth2')
 const db = require('../models/db')
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 // record attendance for each student after a class has ended (present if there for more than 80% of class)
-// called by function below
-// ***give instructor ability to determine percentage?
 function recordAttendance(className) {
     var percentage = 0.8
     db.all('SELECT classroom, startTime, endTime FROM classData WHERE className = ?', className, (err, data) => {
@@ -46,7 +43,7 @@ function recordAttendance(className) {
                     console.log("attendance = ", attendance)
                     var currDay = weekDays[new Date().getDay()]
 
-                    var minTime = 0.8 * (endSec - startSec)
+                    var minTime = percentage * (endSec - startSec)
                     for (var id in attendance) {
                         var attended = + (attendance[id] >= minTime)
                         db.all(`UPDATE attendance SET ${currDay} = ${attended} WHERE id = ${id} AND className = "${className}"`, (err, data) => {
@@ -68,7 +65,7 @@ function recordAttendance(className) {
     return
 }
 
-// Change a HH:MM:SS to seconds
+// Change HH:MM:SS to seconds
 function toSeconds(timeString) {
     var times = timeString.split(':')
     var seconds = parseInt(times[2]) + 60 * parseInt(times[1]) + 3600 * parseInt(times[0])
