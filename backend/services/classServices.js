@@ -1,3 +1,4 @@
+const { getMaxListeners } = require('nodemailer/lib/xoauth2')
 const db = require('../models/db')
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
@@ -5,8 +6,73 @@ const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
 // called by function below
 // ***give instructor ability to determine percentage?
 function recordAttendance(className) {
-    // TODO (Chan)
+    var percentage = 0.8
+    db.all('SELECT classroom, startTime, endTime FROM classData WHERE className = ?', className, (err, data) => {
+        if (err) {
+            console.log("error getting classroom: ", err.message)
+        }
+        else {
+            console.log(data)
+            const classroom = data[0].classroom
+            const startTime = new Date(data[0].startTime)
+            const endTime = new Date(data[0].endTime)
+            const startSec = toSeconds(startTime.toTimeString().split(' ')[0])
+            const endSec = toSeconds(endTime.toTimeString().split(' ')[0])
+            query = `SELECT * FROM ${classroom} WHERE time(timeOut) > ${startTime.getTime()}`
+            db.all(query, (err, data) => {
+                if (err) {
+                    console.error("error getting attendance data: ", err.message)
+                    return
+                }
+                else {
+                    console.log("this data = ", data)
+                    var attendance = {}
+                    for (var i in data) {
+                        var id = data[i].id
+                        console.log('id = ', id)
+                        // Add up total time student has been in room during class
+
+                        var startTime = toSeconds(data[i].timeIn)
+                        if (startTime < startSec) startTime = startSec
+
+                        var endTime = toSeconds(data[i].timeOut)
+                        if (endTime > endSec) endTime = endSec
+
+                        var currTime = 0
+                        if (id in attendance) currTime = attendance[id]
+                        attendance[id] = currTime + endTime - startTime
+
+                    }
+                    console.log("attendance = ", attendance)
+                    var currDay = weekDays[new Date().getDay()]
+
+                    var minTime = 0.8 * (endSec - startSec)
+                    for (var id in attendance) {
+                        var attended = + (attendance[id] >= minTime)
+                        db.all(`UPDATE attendance SET ${currDay} = ${attended} WHERE id = ${id} AND className = "${className}"`, (err, data) => {
+                            if (err){
+                                console.log(err)
+                            }
+                        })
+                        db.all(`UPDATE attendance SET attendances = attendances + 1 WHERE id = ${id} AND className = "${className}"`, (err, data) => {
+                            if (err) {
+                                console.log(err)
+                            }
+                        })
+                    }
+                }
+            })
+        }
+
+    })
     return
+}
+
+// Change a HH:MM:SS to seconds
+function toSeconds(timeString) {
+    var times = timeString.split(':')
+    var seconds = parseInt(times[2]) + 60 * parseInt(times[1]) + 3600 * parseInt(times[0])
+    return seconds
 }
 
 // Logging attendance data
