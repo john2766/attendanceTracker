@@ -94,7 +94,6 @@ export function LiveClass() {
                 })
         }
         else console.log("no class in session")
-        // Display time of next class (ideally) if class not in session
     }, [liveClass, navigate])
 
     return (
@@ -102,18 +101,20 @@ export function LiveClass() {
             sx={{ width: 3/4, margin: 2 }}
             variant='plain'
         >
-            <h2> Live Class Data{liveClass ? ": " + liveClass : '' }</h2>
+            {liveClass ?
+            <>
+                <h2> Live Class Data: {liveClass} </h2>
                 <div>{!rows ?
                     !liveClass ? <NoLiveClass/> : "Loading..." :
                     !isData ? "No students currently in class" :
                     <>
                     <DataGrid
-                    height="700px"
-                    rows={rows}
-                    columns={columns}
-                    hideFooter={true}
-                    rowHeight={25}
-                    columnHeaderHeight={30}
+                        height="700px"
+                        rows={rows}
+                        columns={columns}
+                        hideFooter={true}
+                        rowHeight={25}
+                        columnHeaderHeight={30}
                     />
                     <br/>
                     </>
@@ -123,15 +124,20 @@ export function LiveClass() {
                     !liveClass ? "" : "Loading..." :
                     !isAbsentData ? "No students currently absent" :
                     <DataGrid
-                    height="700px"
-                    rows={rows2}
-                    columns={columns}
-                    hideFooter={true}
-                    rowHeight={25}
-                    columnHeaderHeight={30}
-                    getRowClassName={(params) => `row-theme--${params.row.status}`}
+                        height="700px"
+                        rows={rows2}
+                        columns={columns}
+                        hideFooter={true}
+                        rowHeight={25}
+                        columnHeaderHeight={30}
+                        getRowClassName={(params) => `row-theme--${params.row.status}`}
                     />
                 }</div>
+            </> : <>
+                <h2> Live Class Data: </h2>
+                <div> No classes are currently live. Check back later. </div>
+            </>
+        }
         </Card>
     )
 }

@@ -12,6 +12,7 @@ router.get('/classes', verifyToken, (req, res) => {
             res.send(err.message)
         }
         else {
+            console.log("data = ", data)
             res.send(data)
         }
     })

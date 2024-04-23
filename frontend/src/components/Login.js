@@ -24,13 +24,13 @@ export function Login () {
             .then(response => {
                 localStorage.setItem('token', response.data.token)
                 console.log(response)
+                setPassword(null)
                 navigate('/')
             })
             .catch(error => {
                 console.log(error)
                 alert("Username or password is incorrect. Please try again.")
             })
-        setPassword(null)
     }
 
     function handleSignup() {
@@ -61,6 +61,7 @@ export function Login () {
                 /><br/>
                 <label> Enter password: </label><br/>
                 <TextField
+                    type='password'
                     id='password'
                     name='password'
                     onChange={event => {setPassword(event.target.value)}}

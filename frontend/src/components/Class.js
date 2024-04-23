@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { Card, Dialog, Box, Autocomplete, TextField, setRef } from '@mui/material'
+import { Card, Dialog, Box, Autocomplete, TextField } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
@@ -101,14 +101,14 @@ export function Class () {
                 console.log("Error getting roster: ", error)
             })
 
-    }, [className, refresh])
+    }, [className, days, refresh])
 
     // Quick solution to fix column loading error
     useEffect(() => {
         async function initRefresh() {
             await new Promise(r => setTimeout(r, 100))
             console.log("here")
-            setRefresh(!refresh)
+            setRefresh(refresh => !refresh)
         }
         initRefresh()
     },[className])
@@ -221,6 +221,8 @@ export function Class () {
         axios.post("/class_delete", params, { headers: {'Authorization' : token} })
         setDeleteOpen(false)
         navigate('/')
+        window.location.reload()
+
     }
 
     // Class Roster Table component
@@ -311,7 +313,7 @@ export function Class () {
             </span>)
         return (<Card>
             <h2> {className} </h2>
-            <p> <b>Meeting days:</b> {listDays} &emsp;&emsp; <b>Meeting time:</b> {time} &emsp;&emsp; <b>Location:</b> {location} &emsp;&emsp; <b>Instructor:</b> {instructor} </p>
+            <p> <b>Meeting days:</b> {listDays} &emsp;&emsp; <b>Meeting time:</b> {time} &emsp;&emsp; <b>Location:</b> {location} </p>
         </Card>)
     }
 
@@ -370,6 +372,7 @@ export function Class () {
         : <UploadRoster/>
         }
         <Card
+            sx={{ width: 9/10, margin:2 }}
             variant='plain'
         >
             <br/><button onClick={() => setIsAddStudent(!isAddStudent)}> Add student to class </button>

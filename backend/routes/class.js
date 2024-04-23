@@ -155,7 +155,7 @@ router.post("/student_add", jsonParser, (req, res) => {
 // Class.js: Display class information
 router.get("/class_info", (req, res) => {
     db.all("SELECT * FROM classData WHERE className = ?", req.query.className, (err, data) => {
-        if (err) {console.error(err.message)}
+        if (err) {console.error(err.message); res.status(500).json(err.message)}
         else {
             res.send(data)
         }
