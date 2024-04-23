@@ -18,52 +18,71 @@ const transporter = nodemailer.createTransport({
     
 const mailDetails = {
     from: 'chan.ng.cashin@gmail.com',
-    to: 'cngcashi@purdue.edu',
-    subject: 'Test mail',
-    text: 'Node.js testing mail for GeeksforGeeks'
+    to: '',
+    subject: 'Confirmation Email',
+    text: 'Your attendance is being tracked'
 };
 
 // if this doesn't work, try changing '/sensor_data_time_in' with '/service/sensor_data_time_in'
 router.post("/sensor_data_time_in", jsonParser, (req, res) => {
-    db.all('INSERT INTO POTR063 VALUES (?, ?, ?)', req.body.id, req.body.timeIn, req.body.timeOut, (err, data) => {
+    var id
+    var email
+    db.all('SELECT id, email FROM studentData WHERE rfidToken = ?', req.body.id, (err, data) => {
         if (err) {
             console.error(err.message)
             res.send(err.message)
         }
         else {
-            transporter.sendMail(mailDetails, function (err, data) {
+            console.log("DATA = ", data)
+            console.log(data[0].id)
+            id = data[0].id
+            email = data[0].email
+
+            db.all('INSERT INTO POTR063 VALUES (?, ?, ?)', id, req.body.timeIn, req.body.timeOut, (err, data) => {
                 if (err) {
-                    console.log('Error Occurs');
                     console.error(err.message)
-                } else {
-                    console.log('Email sent successfully');
+                    res.send(err.message)
                 }
-            });
-            console.log(req.body)
-            res.send('success')
+                else {
+                    mailDetails['to'] = email
+                    transporter.sendMail(mailDetails, function (err, data) {
+                        if (err) {
+                            console.log('Error Occurs');
+                            console.error(err.message)
+                        } else {
+                            console.log('Email sent successfully');
+                        }
+                    });
+                    console.log(req.body)
+                    res.send('time in success')
+                }
+            })
         }
     })
 })
 
 router.post("/sensor_data_time_out", jsonParser, (req, res) => {
-    db.all('UPDATE POTR063 SET timeOut = ? WHERE id = ? and timeOut is null', req.body.timeOut, req.body.id, (err, data) => {
+    var id
+    db.all('SELECT id FROM studentData WHERE rfidToken = ?', req.body.id, (err, data) => {
         if (err) {
             console.error(err.message)
             res.send(err.message)
         }
         else {
-            console.log(req.body)
-            res.send('success')
-        }
-    })
-})
+            console.log("DATA = ", data)
+            console.log(data[0].id)
+            id = data[0].id
 
-// Class.js: Get list of all students not already enrolled in className
-router.get("/all_students", (req, res) => {
-    db.all("SELECT id, nameFirst, nameLast, email FROM studentData WHERE id NOT IN (SELECT id FROM attendance WHERE className = ?)", req.query.className, (err, data) => {
-        if (err) {console.error(err.message)}
-        else {
-            res.send(data)
+            db.all('UPDATE POTR063 SET timeOut = ? WHERE id = ? and timeOut is null', req.body.timeOut, id, (err, data) => {
+                if (err) {
+                    console.error(err.message)
+                    res.send(err.message)
+                }
+                else {
+                    console.log(req.body)
+                    res.send('time out success')
+                }
+            })
         }
     })
 })

@@ -1,13 +1,16 @@
 -- USERDATA --
 
 CREATE TABLE IF NOT EXISTS studentData (
-rfidToken BLOB PRIMARY KEY NOT NULL,
+rfidToken TEXT PRIMARY KEY NOT NULL,
 id INTEGER UNIQUE NOT NULL,
 nameLast TEXT NOT NULL,
 nameFirst TEXT NOT NULL,
 email TEXT UNIQUE NOT NULL
 );
 
+INSERT INTO studentData VALUES ('0x436b7afa', 1, "Meyer", "Chris", "meyer367@purdue.edu");
+INSERT INTO studentData VALUES ('0xf33892fa', 2, "Johnson", "Brooke", "john2766@purdue.edu");
+INSERT INTO studentData VALUES ('0xb0ad8374', 3, "Cashin", "Chan", "cngcashi@purdue.edu");
 -- <classroom> --
 
 CREATE TABLE IF NOT EXISTS EE206 (
